@@ -42,3 +42,11 @@ config.rst
 package-lock.json
 geckodriver.log
 *.iml
+
+lib/
+etc/
+bin/
+pyvenv.cfg
+dist/
+build/
+*.ipynb

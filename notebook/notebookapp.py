@@ -1501,7 +1501,9 @@ class NotebookApp(JupyterApp):
     def init_signal(self):
         if not sys.platform.startswith('win') and sys.stdin and sys.stdin.isatty():
             signal.signal(signal.SIGINT, self._handle_sigint)
-        signal.signal(signal.SIGTERM, self._signal_stop)
+        
+        # EDIT commented out killing after sigterm
+        signal.signal(signal.SIGTERM, self._handle_sigterm)
         if hasattr(signal, 'SIGUSR1'):
             # Windows doesn't support SIGUSR1
             signal.signal(signal.SIGUSR1, self._signal_info)
@@ -1509,6 +1511,9 @@ class NotebookApp(JupyterApp):
             # only on BSD-based systems
             signal.signal(signal.SIGINFO, self._signal_info)
     
+    def _handle_sigterm(self, sig, frame):
+        self.log.info('SIGTERM at notebook, will restart kernel')
+
     def _handle_sigint(self, sig, frame):
         """SIGINT handler spawns confirmation dialog"""
         # register more forceful signal handler for ^C^C case
